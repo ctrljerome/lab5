@@ -64,17 +64,29 @@ export default {
   },
   methods: {
     async submitMood() {
-      console.log("User clicked submit button"); // Log the event
-      console.log("Mood value entered:", this.mood); // Log the input data
+  console.log("User clicked submit button");
+  console.log("Name entered:", this.name);
+  console.log("Mood value entered:", this.mood);
 
-      const response = await fetch("https://lab5-api-g91e.onrender.com/api/moods", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mood: this.mood })
-      });
+  try {
+    const response = await fetch("https://lab5-api-g91e.onrender.com/api/moods", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: this.name,
+        mood: this.mood
+      })
+    });
 
-      console.log("API response status:", response.status); // Log the server response status
-    },
+    console.log("API response status:", response.status);
+
+    const data = await response.json();
+    console.log("API response data:", data);
+
+  } catch (error) {
+    console.error("Error submitting mood:", error);
+  }
+},
 
     async fetchHistory() {
       try {
