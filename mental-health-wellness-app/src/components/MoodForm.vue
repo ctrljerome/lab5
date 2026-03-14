@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <h2>Mood Check-in</h2>
-    
+
     <!-- Input Section -->
     <div class="form-group">
       <input v-model="name" placeholder="Your name" :disabled="loading" />
       <textarea v-model="mood" placeholder="How are you feeling today?" :disabled="loading"></textarea>
-      
+
       <button @click="submitMood" :disabled="loading || !name || !mood">
         <span v-if="loading">💬 Processing...</span>
         <span v-else>Submit</span>
@@ -24,7 +24,7 @@
     <!-- Mood History List (Extra Credit) -->
     <h3>Mood History</h3>
     <button @click="fetchHistory" class="refresh-btn">🔄 Refresh History</button>
-    
+
     <table v-if="history.length > 0" class="history-table">
       <thead>
         <tr>
@@ -54,33 +54,28 @@ export default {
       name: '',
       mood: '',
       aiMessage: '',
-      loading: false,  
-      error: null,    
-      history: []      
+      loading: false,
+      error: null,
+      history: []
     };
   },
   mounted() {
-    this.fetchHistory(); 
+    this.fetchHistory();
   },
   methods: {
     async submitMood() {
-      this.loading = true;
-      this.error = null;
-      try {
-        const res = await api.post('/api/moods', {
-          user_id: 1,
-          mood_text: this.mood
-        });
-        
-        this.aiMessage = res.data.ai_message || res.data.aiMessage;
-        this.mood = ''; 
-        this.fetchHistory();
-      } catch (err) {
-        this.error = "Failed to connect to server. Is the backend running?";
-      } finally {
-        this.loading = false;
-      }
+      console.log("User clicked submit button"); // Log the event
+      console.log("Mood value entered:", this.mood); // Log the input data
+
+      const response = await fetch("http://localhost:3000/mood", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mood: this.mood })
+      });
+
+      console.log("API response status:", response.status); // Log the server response status
     },
+
     async fetchHistory() {
       try {
         const res = await api.get('/api/moods');
@@ -94,12 +89,50 @@ export default {
 </script>
 
 <style scoped>
-.container { max-width: 600px; margin: auto; font-family: sans-serif; }
-.form-group { display: flex; flex-direction: column; gap: 10px; }
-.ai-box { background:rgb(0, 0, 0); padding: 15px; border-left: 5px solid #2196f3; margin-top: 10px; }
-.error-msg { color: red; font-weight: bold; }
-.history-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-.history-table th, .history-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-.refresh-btn { margin-bottom: 10px; cursor: pointer; }
-button:disabled { opacity: 0.5; cursor: not-allowed; }
+.container {
+  max-width: 600px;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-box {
+  background: rgb(0, 0, 0);
+  padding: 15px;
+  border-left: 5px solid #2196f3;
+  margin-top: 10px;
+}
+
+.error-msg {
+  color: red;
+  font-weight: bold;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.refresh-btn {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 </style>
