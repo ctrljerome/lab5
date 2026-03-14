@@ -67,7 +67,7 @@ export default {
       console.log("User clicked submit button"); // Log the event
       console.log("Mood value entered:", this.mood); // Log the input data
 
-      const response = await fetch("http://localhost:3000/mood", {
+      const response = await fetch("http://https://lab5-api-g91e.onrender.com/api/moods", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mood: this.mood })
