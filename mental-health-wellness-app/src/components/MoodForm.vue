@@ -67,7 +67,8 @@ export default {
     async submitMood() {
   console.log("User clicked submit button");
   console.log("Name entered:", this.name);
-  console.log("Mood value entered:", moodValue);
+  console.log("Mood value entered:", this.mood);
+  console.log("User mood value:", moodValue);
 
   try {
     const response = await fetch("https://lab5-api-g91e.onrender.com/api/moods", {
